@@ -1,0 +1,1108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Account - QFX Cinemas</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 50%, #7e22ce 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        /* Header Styles */
+        header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .header-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 28px;
+            font-weight: 800;
+            background: linear-gradient(45deg, #e63946, #f77f00);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-decoration: none;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+
+        .user-menu {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 8px 16px;
+            background: linear-gradient(135deg, #e63946 0%, #f77f00 100%);
+            color: white;
+            border-radius: 25px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .user-menu:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(230, 57, 70, 0.3);
+        }
+
+        .user-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+        }
+
+        /* Main Container */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 30px 20px;
+        }
+
+        /* Account Dashboard */
+        .account-header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .account-grid {
+            display: grid;
+            grid-template-columns: auto 1fr auto;
+            gap: 30px;
+            align-items: center;
+        }
+
+        .profile-avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #e63946, #f77f00);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+            font-weight: 700;
+            color: white;
+            box-shadow: 0 5px 15px rgba(230, 57, 70, 0.3);
+        }
+
+        .profile-info h1 {
+            font-size: 28px;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 8px;
+        }
+
+        .profile-meta {
+            color: #666;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .club-qfx-status {
+            background: linear-gradient(135deg, #fbbf24, #f59e0b);
+            color: #78350f;
+            padding: 15px 20px;
+            border-radius: 15px;
+            text-align: center;
+            min-width: 200px;
+        }
+
+        .club-label {
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 5px;
+        }
+
+        .club-points {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+
+        .club-tier {
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        /* Navigation Tabs */
+        .account-nav {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 10px;
+            margin-bottom: 30px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .nav-tabs {
+            display: flex;
+            gap: 10px;
+            overflow-x: auto;
+        }
+
+        .nav-tab {
+            padding: 12px 24px;
+            background: transparent;
+            border: none;
+            border-radius: 10px;
+            font-weight: 500;
+            color: #666;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+        }
+
+        .nav-tab:hover {
+            background: #f3f4f6;
+            color: #333;
+        }
+
+        .nav-tab.active {
+            background: linear-gradient(135deg, #e63946, #f77f00);
+            color: white;
+            box-shadow: 0 3px 10px rgba(230, 57, 70, 0.2);
+        }
+
+        /* Content Sections */
+        .content-section {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            display: none;
+        }
+
+        .content-section.active {
+            display: block;
+        }
+
+        .section-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #e2e8f0;
+        }
+
+        /* Booking History */
+        .bookings-grid {
+            display: grid;
+            gap: 20px;
+        }
+
+        .booking-card {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 20px;
+            border-left: 4px solid #e63946;
+            transition: all 0.3s ease;
+        }
+
+        .booking-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .booking-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .booking-movie {
+            flex: 1;
+        }
+
+        .booking-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 5px;
+        }
+
+        .booking-details {
+            font-size: 14px;
+            color: #666;
+            line-height: 1.5;
+        }
+
+        .booking-status {
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .status-upcoming {
+            background: #dbeafe;
+            color: #1e40af;
+        }
+
+        .status-completed {
+            background: #d1fae5;
+            color: #065f46;
+        }
+
+        .status-cancelled {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .booking-seats {
+            display: flex;
+            gap: 5px;
+            margin: 10px 0;
+        }
+
+        .seat-chip {
+            background: #e63946;
+            color: white;
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 500;
+        }
+
+        .booking-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+            flex-wrap: wrap;
+        }
+
+        .btn-small {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #e63946, #f77f00);
+            color: white;
+        }
+
+        .btn-secondary {
+            background: #e2e8f0;
+            color: #666;
+        }
+
+        .btn-small:hover {
+            transform: translateY(-1px);
+        }
+
+        /* Profile Settings */
+        .profile-form {
+            max-width: 600px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: #4a5568;
+            font-size: 14px;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            background: #f7fafc;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #e63946;
+            background: white;
+            box-shadow: 0 0 0 3px rgba(230, 57, 70, 0.1);
+        }
+
+        .form-actions {
+            display: flex;
+            gap: 15px;
+            margin-top: 30px;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(230, 57, 70, 0.3);
+        }
+
+        .btn-secondary:hover {
+            background: #cbd5e0;
+        }
+
+        /* Watchlist */
+        .watchlist-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 20px;
+        }
+
+        .movie-card {
+            background: #f8f9fa;
+            border-radius: 15px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .movie-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+
+        .movie-poster {
+            width: 100%;
+            height: 280px;
+            background-size: cover;
+            background-position: center;
+            position: relative;
+        }
+
+        .movie-info {
+            padding: 15px;
+        }
+
+        .movie-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 8px;
+        }
+
+        .movie-meta {
+            font-size: 12px;
+            color: #666;
+        }
+
+        .remove-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: rgba(230, 57, 70, 0.9);
+            color: white;
+            border: none;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+
+        .remove-btn:hover {
+            background: rgba(230, 57, 70, 1);
+            transform: scale(1.1);
+        }
+
+        /* Empty States */
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #666;
+        }
+
+        .empty-icon {
+            font-size: 48px;
+            margin-bottom: 20px;
+            opacity: 0.5;
+        }
+
+        .empty-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .empty-description {
+            font-size: 14px;
+            margin-bottom: 20px;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .account-grid {
+                grid-template-columns: 1fr;
+                text-align: center;
+                gap: 20px;
+            }
+
+            .profile-avatar {
+                margin: 0 auto;
+            }
+
+            .club-qfx-status {
+                margin: 0 auto;
+                max-width: 250px;
+            }
+
+            .nav-tabs {
+                flex-direction: column;
+            }
+
+            .booking-header {
+                flex-direction: column;
+            }
+
+            .watchlist-grid {
+                grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            }
+
+            .form-actions {
+                flex-direction: column;
+            }
+        }
+
+        /* Utility Classes */
+        .text-center {
+            text-align: center;
+        }
+
+        .mb-20 {
+            margin-bottom: 20px;
+        }
+
+        .mt-20 {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-container">
+            <a href="index.html" class="logo">QFX Cinemas</a>
+            <div class="header-actions">
+                <a href="index.html" class="btn btn-secondary" style="text-decoration: none; padding: 10px 20px;">
+                    🏠 Home
+                </a>
+                <a href="seproject.html" class="user-menu">
+                    <div class="user-avatar" id="headerAvatar">U</div>
+                    <span id="headerUserName">User</span>
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+        <!-- Account Header -->
+        <div class="account-header">
+            <div class="account-grid">
+                <div class="profile-avatar" id="profileAvatar">U</div>
+                <div class="profile-info">
+                    <h1 id="profileName">Loading...</h1>
+                    <div class="profile-meta" id="profileMeta">
+                        <div>📧 <span id="profileEmail">loading...</span></div>
+                        <div>📱 <span id="profilePhone">loading...</span></div>
+                        <div>📍 <span id="profileLocation">Kathmandu, Nepal</span></div>
+                        <div>📅 Member since <span id="memberSince">loading...</span></div>
+                    </div>
+                </div>
+                <div class="club-qfx-status">
+                    <div class="club-label">Club QFX</div>
+                    <div class="club-points" id="clubPoints">0</div>
+                    <div class="club-tier" id="clubTier">Silver Member</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Navigation Tabs -->
+        <div class="account-nav">
+            <div class="nav-tabs">
+                <button class="nav-tab active" onclick="switchTab('bookings')">
+                    🎫 My Bookings
+                </button>
+                <button class="nav-tab" onclick="switchTab('watchlist')">
+                    ❤️ Watchlist
+                </button>
+                <button class="nav-tab" onclick="switchTab('profile')">
+                    👤 Profile Settings
+                </button>
+                <button class="nav-tab" onclick="switchTab('preferences')">
+                    ⚙️ Preferences
+                </button>
+            </div>
+        </div>
+
+        <!-- My Bookings Section -->
+        <div class="content-section active" id="bookings-section">
+            <h2 class="section-title">My Bookings</h2>
+            <div class="bookings-grid" id="bookingsGrid">
+                <div class="loading">
+                    <div style="text-align: center; padding: 40px;">
+                        <div style="font-size: 24px; margin-bottom: 15px;">📋</div>
+                        <p>Loading your bookings...</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Watchlist Section -->
+        <div class="content-section" id="watchlist-section">
+            <h2 class="section-title">My Watchlist</h2>
+            <div class="watchlist-grid" id="watchlistGrid">
+                <div class="loading">
+                    <div style="text-align: center; padding: 40px;">
+                        <div style="font-size: 24px; margin-bottom: 15px;">❤️</div>
+                        <p>Loading your watchlist...</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Profile Settings Section -->
+        <div class="content-section" id="profile-section">
+            <h2 class="section-title">Profile Settings</h2>
+            <form class="profile-form" id="profileForm">
+                <div class="form-group">
+                    <label for="firstName">First Name</label>
+                    <input type="text" id="firstName" name="firstName" required>
+                </div>
+                <div class="form-group">
+                    <label for="lastName">Last Name</label>
+                    <input type="text" id="lastName" name="lastName" required>
+                </div>
+                <div class="form-group">
+                    <label for="email">Email Address</label>
+                    <input type="email" id="email" name="email" required>
+                </div>
+                <div class="form-group">
+                    <label for="phone">Phone Number</label>
+                    <input type="tel" id="phone" name="phone" required>
+                </div>
+                <div class="form-group">
+                    <label for="preferredLocation">Preferred Cinema Location</label>
+                    <select id="preferredLocation" name="preferredLocation">
+                        <option value="kathmandu">Kathmandu</option>
+                        <option value="pokhara">Pokhara</option>
+                        <option value="lalitpur">Lalitpur</option>
+                        <option value="bhaktapur">Bhaktapur</option>
+                        <option value="biratnagar">Biratnagar</option>
+                    </select>
+                </div>
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary">💾 Save Changes</button>
+                    <button type="button" class="btn btn-secondary" onclick="resetForm()">↻ Reset</button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Preferences Section -->
+        <div class="content-section" id="preferences-section">
+            <h2 class="section-title">Preferences</h2>
+            <div style="max-width: 600px;">
+                <div class="form-group">
+                    <label>Notification Preferences</label>
+                    <div style="display: flex; flex-direction: column; gap: 15px; margin-top: 15px;">
+                        <label class="checkbox-group">
+                            <input type="checkbox" id="emailNotifications" checked>
+                            <span>📧 Email notifications for new movies and offers</span>
+                        </label>
+                        <label class="checkbox-group">
+                            <input type="checkbox" id="smsNotifications">
+                            <span>📱 SMS notifications for booking reminders</span>
+                        </label>
+                        <label class="checkbox-group">
+                            <input type="checkbox" id="promotionalEmails">
+                            <span>🎬 Promotional emails and special offers</span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="seatPreference">Default Seat Preference</label>
+                    <select id="seatPreference" style="margin-top: 10px;">
+                        <option value="any">No Preference</option>
+                        <option value="middle">Middle Seats</option>
+                        <option value="front">Front Rows</option>
+                        <option value="back">Back Rows</option>
+                        <option value="aisle">Aisle Seats</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="languagePreference">Preferred Movie Language</label>
+                    <select id="languagePreference" style="margin-top: 10px;">
+                        <option value="any">Any Language</option>
+                        <option value="english">English</option>
+                        <option value="nepali">Nepali</option>
+                        <option value="hindi">Hindi</option>
+                    </select>
+                </div>
+
+                <div class="form-actions">
+                    <button class="btn btn-primary" onclick="savePreferences()">💾 Save Preferences</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/movie-service.js"></script>
+    <script src="js/cinema-service.js"></script>
+    <script>
+        let currentUser = null;
+        let userBookings = [];
+        let userWatchlist = [];
+
+        // Initialize page
+        document.addEventListener('DOMContentLoaded', function() {
+            checkAuthentication();
+            loadUserData();
+            loadUserBookings();
+            loadUserWatchlist();
+        });
+
+        function checkAuthentication() {
+            // Check if user is logged in
+            const userData = localStorage.getItem('userProfile');
+            if (!userData) {
+                // Redirect to login if not authenticated
+                window.location.href = 'seproject.html?redirect=account.html';
+                return;
+            }
+
+            try {
+                currentUser = JSON.parse(userData);
+                updateHeaderUser();
+            } catch (error) {
+                console.error('Error parsing user data:', error);
+                window.location.href = 'seproject.html?redirect=account.html';
+            }
+        }
+
+        function updateHeaderUser() {
+            if (!currentUser) return;
+
+            const initials = getInitials(currentUser.firstName, currentUser.lastName);
+            document.getElementById('headerAvatar').textContent = initials;
+            document.getElementById('headerUserName').textContent = `${currentUser.firstName} ${currentUser.lastName}`;
+        }
+
+        function getInitials(firstName, lastName) {
+            return (firstName?.charAt(0) || 'U') + (lastName?.charAt(0) || '');
+        }
+
+        function loadUserData() {
+            if (!currentUser) return;
+
+            // Update profile information
+            const initials = getInitials(currentUser.firstName, currentUser.lastName);
+            document.getElementById('profileAvatar').textContent = initials;
+            document.getElementById('profileName').textContent = `${currentUser.firstName} ${currentUser.lastName}`;
+            document.getElementById('profileEmail').textContent = currentUser.email || 'Not provided';
+            document.getElementById('profilePhone').textContent = currentUser.phone || 'Not provided';
+
+            // Calculate member since date
+            const memberSince = currentUser.createdAt || new Date().toISOString();
+            const memberDate = new Date(memberSince);
+            document.getElementById('memberSince').textContent = memberDate.toLocaleDateString('en-US', {
+                year: 'numeric',
+                month: 'long'
+            });
+
+            // Load Club QFX points (simulated)
+            loadClubPoints();
+
+            // Load form fields
+            document.getElementById('firstName').value = currentUser.firstName || '';
+            document.getElementById('lastName').value = currentUser.lastName || '';
+            document.getElementById('email').value = currentUser.email || '';
+            document.getElementById('phone').value = currentUser.phone || '';
+            document.getElementById('preferredLocation').value = currentUser.preferredLocation || 'kathmandu';
+
+            // Setup form submission
+            document.getElementById('profileForm').addEventListener('submit', handleProfileUpdate);
+        }
+
+        function loadClubPoints() {
+            // Simulate Club QFX points
+            const points = Math.floor(Math.random() * 5000) + 1000;
+            document.getElementById('clubPoints').textContent = points.toLocaleString();
+
+            // Determine tier based on points
+            let tier = 'Silver Member';
+            if (points >= 5000) tier = 'Gold Member';
+            else if (points >= 2500) tier = 'Silver Member';
+            else if (points >= 1000) tier = 'Bronze Member';
+
+            document.getElementById('clubTier').textContent = tier;
+        }
+
+        async function loadUserBookings() {
+            try {
+                // In a real implementation, this would fetch from a backend API
+                // For now, generate mock booking data
+                userBookings = generateMockBookings();
+                renderBookings();
+            } catch (error) {
+                console.error('Error loading bookings:', error);
+                document.getElementById('bookingsGrid').innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-icon">😞</div>
+                        <div class="empty-title">Error Loading Bookings</div>
+                        <div class="empty-description">Unable to load your booking history</div>
+                    </div>
+                `;
+            }
+        }
+
+        function generateMockBookings() {
+            const bookings = [];
+            const movieIds = ['blockbuster', 'epic-drama', 'comedy-gold', 'horror-nights'];
+            const statuses = ['upcoming', 'completed', 'completed'];
+
+            for (let i = 0; i < 5; i++) {
+                const movieId = movieIds[Math.floor(Math.random() * movieIds.length)];
+                const movie = movieService.getMovieById(movieId);
+                const status = statuses[Math.floor(Math.random() * statuses.length)];
+                const bookingDate = new Date();
+                bookingDate.setDate(bookingDate.getDate() - Math.floor(Math.random() * 30));
+
+                if (movie) {
+                    bookings.push({
+                        id: `QFX${Date.now()}${i}`,
+                        movie: movie,
+                        bookingDate: bookingDate.toISOString(),
+                        showtime: {
+                            date: status === 'upcoming' ?
+                                new Date(Date.now() + Math.random() * 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0] :
+                                bookingDate.toISOString().split('T')[0],
+                            time: ['10:00 AM', '2:30 PM', '6:00 PM', '8:30 PM'][Math.floor(Math.random() * 4)]
+                        },
+                        cinema: {
+                            name: 'QFX Kumari',
+                            location: 'Kathmandu'
+                        },
+                        seats: [
+                            { category: 'Gold', row: 'E', number: 8 },
+                            { category: 'Gold', row: 'E', number: 9 }
+                        ],
+                        status: status,
+                        totalAmount: Math.floor(Math.random() * 2000) + 500
+                    });
+                }
+            }
+
+            return bookings.sort((a, b) => new Date(b.bookingDate) - new Date(a.bookingDate));
+        }
+
+        function renderBookings() {
+            const container = document.getElementById('bookingsGrid');
+
+            if (userBookings.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-icon">🎬</div>
+                        <div class="empty-title">No Bookings Yet</div>
+                        <div class="empty-description">Start booking movies to see your booking history here</div>
+                        <a href="index.html" class="btn btn-primary">Browse Movies</a>
+                    </div>
+                `;
+                return;
+            }
+
+            const bookingsHtml = userBookings.map(booking => {
+                const statusClass = booking.status === 'upcoming' ? 'status-upcoming' :
+                                   booking.status === 'completed' ? 'status-completed' : 'status-cancelled';
+
+                const showDate = new Date(booking.showtime.date);
+                const formattedDate = showDate.toLocaleDateString('en-US', {
+                    weekday: 'short',
+                    month: 'short',
+                    day: 'numeric'
+                });
+
+                const seatsHtml = booking.seats.map(seat =>
+                    `<span class="seat-chip">${seat.category} ${seat.row}${seat.number}</span>`
+                ).join('');
+
+                return `
+                    <div class="booking-card">
+                        <div class="booking-header">
+                            <div class="booking-movie">
+                                <div class="booking-title">${booking.movie.title}</div>
+                                <div class="booking-details">
+                                    ${formattedDate} at ${booking.showtime.time}<br>
+                                    ${booking.cinema.name}, ${booking.cinema.location}<br>
+                                    Booking ID: ${booking.id}
+                                </div>
+                            </div>
+                            <div class="booking-status ${statusClass}">
+                                ${booking.status}
+                            </div>
+                        </div>
+                        <div class="booking-seats">
+                            ${seatsHtml}
+                        </div>
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 10px;">
+                            <div style="font-weight: 600; color: #333;">
+                                Total: Rs ${booking.totalAmount}
+                            </div>
+                            ${booking.status === 'upcoming' ? `
+                                <div class="booking-actions">
+                                    <button class="btn-small btn-primary" onclick="downloadTicket('${booking.id}')">
+                                        📄 Download Ticket
+                                    </button>
+                                    <button class="btn-small btn-secondary" onclick="manageBooking('${booking.id}')">
+                                        ⚙️ Manage
+                                    </button>
+                                </div>
+                            ` : booking.status === 'completed' ? `
+                                <div class="booking-actions">
+                                    <button class="btn-small btn-secondary" onclick="rateMovie('${booking.movie.id}')">
+                                        ⭐ Rate Movie
+                                    </button>
+                                    <button class="btn-small btn-secondary" onclick="bookAgain('${booking.movie.id}')">
+                                        🔄 Book Again
+                                    </button>
+                                </div>
+                            ` : ''}
+                        </div>
+                    </div>
+                `;
+            }).join('');
+
+            container.innerHTML = bookingsHtml;
+        }
+
+        async function loadUserWatchlist() {
+            try {
+                // Load watchlist from movie service
+                if (typeof movieService !== 'undefined') {
+                    userWatchlist = movieService.getWatchlist();
+                    renderWatchlist();
+                }
+            } catch (error) {
+                console.error('Error loading watchlist:', error);
+                document.getElementById('watchlistGrid').innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-icon">😞</div>
+                        <div class="empty-title">Error Loading Watchlist</div>
+                        <div class="empty-description">Unable to load your watchlist</div>
+                    </div>
+                `;
+            }
+        }
+
+        function renderWatchlist() {
+            const container = document.getElementById('watchlistGrid');
+
+            if (userWatchlist.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-icon">❤️</div>
+                        <div class="empty-title">Your Watchlist is Empty</div>
+                        <div class="empty-description">Add movies to your watchlist to keep track of them</div>
+                        <a href="index.html" class="btn btn-primary">Browse Movies</a>
+                    </div>
+                `;
+                return;
+            }
+
+            const watchlistHtml = userWatchlist.map(movie => `
+                <div class="movie-card" onclick="viewMovie('${movie.id}')">
+                    <div class="movie-poster" style="background-image: url('${movie.poster_url}')">
+                        <button class="remove-btn" onclick="event.stopPropagation(); removeFromWatchlist('${movie.id}')">×</button>
+                    </div>
+                    <div class="movie-info">
+                        <div class="movie-title">${movie.title}</div>
+                        <div class="movie-meta">${movie.duration} • ${movie.rating} • ${movie.language}</div>
+                    </div>
+                </div>
+            `).join('');
+
+            container.innerHTML = watchlistHtml;
+        }
+
+        function switchTab(tabName) {
+            // Update nav tabs
+            document.querySelectorAll('.nav-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            event.target.classList.add('active');
+
+            // Update content sections
+            document.querySelectorAll('.content-section').forEach(section => {
+                section.classList.remove('active');
+            });
+            document.getElementById(`${tabName}-section`).classList.add('active');
+        }
+
+        function handleProfileUpdate(e) {
+            e.preventDefault();
+
+            const formData = {
+                firstName: document.getElementById('firstName').value,
+                lastName: document.getElementById('lastName').value,
+                email: document.getElementById('email').value,
+                phone: document.getElementById('phone').value,
+                preferredLocation: document.getElementById('preferredLocation').value
+            };
+
+            // Update current user object
+            currentUser = { ...currentUser, ...formData };
+
+            // Save to localStorage
+            localStorage.setItem('userProfile', JSON.stringify(currentUser));
+
+            // Update UI
+            updateHeaderUser();
+            loadUserData();
+
+            // Show success message
+            alert('Profile updated successfully!');
+        }
+
+        function resetForm() {
+            document.getElementById('profileForm').reset();
+            loadUserData();
+        }
+
+        function savePreferences() {
+            const preferences = {
+                emailNotifications: document.getElementById('emailNotifications').checked,
+                smsNotifications: document.getElementById('smsNotifications').checked,
+                promotionalEmails: document.getElementById('promotionalEmails').checked,
+                seatPreference: document.getElementById('seatPreference').value,
+                languagePreference: document.getElementById('languagePreference').value,
+                preferredLocation: document.getElementById('preferredLocation').value
+            };
+
+            localStorage.setItem('userPreferences', JSON.stringify(preferences));
+            alert('Preferences saved successfully!');
+        }
+
+        function removeFromWatchlist(movieId) {
+            if (typeof movieService !== 'undefined') {
+                movieService.removeFromWatchlist(movieId);
+                userWatchlist = movieService.getWatchlist();
+                renderWatchlist();
+            }
+        }
+
+        function viewMovie(movieId) {
+            window.location.href = `movie-details.html?id=${movieId}`;
+        }
+
+        function downloadTicket(bookingId) {
+            alert(`Downloading ticket for booking ${bookingId}\n\nIn a real implementation, this would generate a PDF ticket with QR code.`);
+        }
+
+        function manageBooking(bookingId) {
+            alert(`Manage booking ${bookingId}\n\nOptions would include: change seats, change showtime, cancel booking (subject to terms)`);
+        }
+
+        function rateMovie(movieId) {
+            alert(`Rate movie ${movieId}\n\nIn a real implementation, this would open a rating dialog`);
+        }
+
+        function bookAgain(movieId) {
+            localStorage.setItem('selectedMovie', movieId);
+            window.location.href = `movie-details.html?id=${movieId}`;
+        }
+
+        // Add checkbox styling
+        const style = document.createElement('style');
+        style.textContent = `
+            .checkbox-group {
+                display: flex;
+                align-items: flex-start;
+                gap: 10px;
+                cursor: pointer;
+                margin-bottom: 10px;
+            }
+            .checkbox-group input[type="checkbox"] {
+                margin-top: 2px;
+                width: auto;
+            }
+            .checkbox-group span {
+                font-size: 14px;
+                color: #333;
+                line-height: 1.5;
+            }
+        `;
+        document.head.appendChild(style);
+    </script>
+</body>
+</html>
