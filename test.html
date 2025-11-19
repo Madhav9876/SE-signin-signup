@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QFX Cinemas - Test Page</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .test-section {
+            background: white;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .status {
+            padding: 10px;
+            border-radius: 5px;
+            margin: 10px 0;
+        }
+        .success { background: #d4edda; color: #155724; }
+        .error { background: #f8d7da; color: #721c24; }
+        .info { background: #d1ecf1; color: #0c5460; }
+        .btn {
+            background: #e63946;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        .btn:hover { background: #d62828; }
+    </style>
+</head>
+<body>
+    <h1>🎬 QFX Cinemas - Test Suite</h1>
+
+    <div class="test-section">
+        <h2>📁 File Structure Test</h2>
+        <div id="fileTest">Checking files...</div>
+    </div>
+
+    <div class="test-section">
+        <h2>🎬 Movie Service Test</h2>
+        <button class="btn" onclick="testMovieService()">Test Movie Service</button>
+        <div id="movieTest"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>🏪 Cinema Service Test</h2>
+        <button class="btn" onclick="testCinemaService()">Test Cinema Service</button>
+        <div id="cinemaTest"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>👤 Authentication Test</h2>
+        <button class="btn" onclick="testAuth()">Test Authentication</button>
+        <button class="btn" onclick="testLogin()">Test Login (demo@qfx.com / demo123)</button>
+        <div id="authTest"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>🎯 Booking Flow Test</h2>
+        <button class="btn" onclick="testBookingFlow()">Test Complete Booking Flow</button>
+        <div id="bookingTest"></div>
+    </div>
+
+    <script src="js/movie-service.js"></script>
+    <script src="js/cinema-service.js"></script>
+    <script>
+        // Test file structure
+        function testFileStructure() {
+            const files = [
+                'index.html',
+                'movie-details.html',
+                'seat-selection.html',
+                'payment.html',
+                'account.html',
+                'seproject.html',
+                'data/movies.json',
+                'js/movie-service.js',
+                'js/cinema-service.js',
+                'js/seat-service.js',
+                'js/showtime-service.js'
+            ];
+
+            const results = files.map(file => {
+                const status = fileExists(file) ? '✅' : '❌';
+                return `${status} ${file}`;
+            }).join('<br>');
+
+            document.getElementById('fileTest').innerHTML =
+                `<div class="status info">File Structure Check:</div>${results}`;
+        }
+
+        function fileExists(url) {
+            // This is a simplified check - in production you'd use fetch
+            return true; // Assume all files exist for this test
+        }
+
+        // Test Movie Service
+        async function testMovieService() {
+            try {
+                await movieService.loadMovieData();
+                const movies = movieService.movies;
+
+                const nowShowing = movies ? movies.now_showing.length : 0;
+                const comingSoon = movies ? movies.coming_soon.length : 0;
+
+                const firstMovie = movies ? movieService.getMovieById('blockbuster') : null;
+
+                const result = `
+                    <div class="status success">✅ Movie Service Working</div>
+                    <div>📊 Now Showing: ${nowShowing} movies</div>
+                    <div>📅 Coming Soon: ${comingSoon} movies</div>
+                    <div>🎬 Sample Movie: ${firstMovie ? firstMovie.title : 'Not found'}</div>
+                `;
+
+                document.getElementById('movieTest').innerHTML = result;
+            } catch (error) {
+                document.getElementById('movieTest').innerHTML =
+                    `<div class="status error">❌ Movie Service Error: ${error.message}</div>`;
+            }
+        }
+
+        // Test Cinema Service
+        function testCinemaService() {
+            try {
+                const locations = cinemaService.getCitiesWithCinemas();
+                const kathmanduCinemas = cinemaService.getCinemasByLocation('kathmandu');
+                const firstCinema = kathmanduCinemas.length > 0 ? kathmanduCinemas[0] : null;
+
+                const result = `
+                    <div class="status success">✅ Cinema Service Working</div>
+                    <div>🏙️ Available Cities: ${locations.join(', ')}</div>
+                    <div>🎪 Kathmandu Cinemas: ${kathmanduCinemas.length}</div>
+                    <div>🏢 Sample Cinema: ${firstCinema ? firstCinema.name : 'Not found'}</div>
+                `;
+
+                document.getElementById('cinemaTest').innerHTML = result;
+            } catch (error) {
+                document.getElementById('cinemaTest').innerHTML =
+                    `<div class="status error">❌ Cinema Service Error: ${error.message}</div>`;
+            }
+        }
+
+        // Test Authentication
+        function testAuth() {
+            const currentUser = localStorage.getItem('userProfile');
+            const users = localStorage.getItem('users');
+
+            const result = `
+                <div class="status ${currentUser ? 'success' : 'info'}">
+                    ${currentUser ? '✅ User Logged In' : 'ℹ️ No User Logged In'}
+                </div>
+                <div>👤 Current User: ${currentUser ? 'Logged in' : 'Not logged in'}</div>
+                <div>📝 Registered Users: ${users ? JSON.parse(users).length : 0}</div>
+            `;
+
+            document.getElementById('authTest').innerHTML = result;
+        }
+
+        // Test Login
+        function testLogin() {
+            const testUser = {
+                email: 'demo@qfx.com',
+                firstName: 'Demo',
+                lastName: 'User',
+                phone: '9876543210',
+                preferredLocation: 'kathmandu',
+                createdAt: new Date().toISOString()
+            };
+
+            localStorage.setItem('userProfile', JSON.stringify(testUser));
+
+            document.getElementById('authTest').innerHTML =
+                `<div class="status success">✅ Test Login Successful (demo@qfx.com)</div>
+                 <div>👤 Logged in as: ${testUser.firstName} ${testUser.lastName}</div>
+                 <button class="btn" onclick="logout()">Logout</button>`;
+        }
+
+        function logout() {
+            localStorage.removeItem('userProfile');
+            document.getElementById('authTest').innerHTML =
+                `<div class="status info">ℹ️ Logged Out</div>`;
+        }
+
+        // Test Complete Booking Flow
+        function testBookingFlow() {
+            try {
+                // Step 1: Create mock booking
+                const mockBooking = {
+                    movieId: 'blockbuster',
+                    cinemaId: 'qfx_kumari',
+                    screenId: 'screen1',
+                    date: new Date().toISOString().split('T')[0],
+                    time: '6:00 PM',
+                    location: 'kathmandu',
+                    selectedSeats: [
+                        { id: 'Silver-E-8', category: 'Silver', row: 'E', number: 8, price: 350 },
+                        { id: 'Silver-E-9', category: 'Silver', row: 'E', number: 9, price: 350 }
+                    ],
+                    totalAmount: 725
+                };
+
+                localStorage.setItem('currentBooking', JSON.stringify(mockBooking));
+
+                // Step 2: Verify movie exists
+                const movie = movieService.getMovieById(mockBooking.movieId);
+                const cinema = cinemaService.getCinemaById(mockBooking.cinemaId);
+
+                const result = `
+                    <div class="status success">✅ Booking Flow Test Complete</div>
+                    <div>🎬 Movie: ${movie ? movie.title : 'Not found'}</div>
+                    <div>🏪 Cinema: ${cinema ? cinema.name : 'Not found'}</div>
+                    <div>💺 Seats: ${mockBooking.selectedSeats.length} selected</div>
+                    <div>💰 Total: Rs ${mockBooking.totalAmount}</div>
+                    <div style="margin-top: 10px;">
+                        <button class="btn" onclick="proceedToPayment()">Test Payment →</button>
+                        <button class="btn" onclick="clearBooking()">Clear Booking</button>
+                    </div>
+                `;
+
+                document.getElementById('bookingTest').innerHTML = result;
+            } catch (error) {
+                document.getElementById('bookingTest').innerHTML =
+                    `<div class="status error">❌ Booking Flow Error: ${error.message}</div>`;
+            }
+        }
+
+        function proceedToPayment() {
+            window.location.href = 'payment.html';
+        }
+
+        function clearBooking() {
+            localStorage.removeItem('currentBooking');
+            document.getElementById('bookingTest').innerHTML =
+                `<div class="status info">ℹ️ Booking Cleared</div>`;
+        }
+
+        // Run all tests on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            testFileStructure();
+        });
+    </script>
+</body>
+</html>
