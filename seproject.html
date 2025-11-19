@@ -261,8 +261,8 @@
 <body>
     <div class="auth-container">
         <div class="auth-header">
-            <h1>Welcome</h1>
-            <p>Please login or create a new account</p>
+            <h1>Welcome to QFX Cinemas</h1>
+            <p>Login or create an account to book movies</p>
         </div>
 
         <div class="auth-tabs">
@@ -308,6 +308,12 @@
             
             <div class="switch-form">
                 Don't have an account? <a href="#" onclick="showSignup()">Sign Up</a>
+            </div>
+
+            <div style="margin-top: 20px; text-align: center;">
+                <a href="index.html" style="color: #667eea; text-decoration: none; font-size: 14px;">
+                    ← Continue as Guest
+                </a>
             </div>
         </div>
 
@@ -363,6 +369,30 @@
     </div>
 
     <script>
+        // Initialize page
+        document.addEventListener('DOMContentLoaded', function() {
+            checkForRedirect();
+            checkExistingSession();
+        });
+
+        function checkForRedirect() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const redirect = urlParams.get('redirect');
+            if (redirect) {
+                localStorage.setItem('authRedirect', redirect);
+            }
+        }
+
+        function checkExistingSession() {
+            const userData = localStorage.getItem('userProfile');
+            if (userData) {
+                // User is already logged in, redirect to account or intended page
+                const redirect = localStorage.getItem('authRedirect') || 'account.html';
+                localStorage.removeItem('authRedirect');
+                window.location.href = redirect;
+            }
+        }
+
         function showLogin() {
             document.getElementById('loginForm').classList.add('active');
             document.getElementById('signupForm').classList.remove('active');
@@ -377,63 +407,151 @@
             document.querySelectorAll('.auth-tab')[0].classList.remove('active');
         }
 
+        // Login handler
         document.getElementById('loginFormElement').addEventListener('submit', function(e) {
             e.preventDefault();
-            
+
             const email = document.getElementById('loginEmail').value;
             const password = document.getElementById('loginPassword').value;
-            
+
             if (!email || !password) {
                 alert('Please fill in all fields');
                 return;
             }
-            
+
             const btn = document.querySelector('#loginForm .auth-btn');
             btn.textContent = 'Logging in...';
             btn.disabled = true;
-            
+
+            // Simulate login process
             setTimeout(() => {
-                alert('Login successful!');
-                btn.textContent = 'Login';
-                btn.disabled = false;
-                // window.location.href = '/dashboard';
+                attemptLogin(email, password);
             }, 1500);
         });
 
+        // Signup handler
         document.getElementById('signupFormElement').addEventListener('submit', function(e) {
             e.preventDefault();
-            
+
             const name = document.getElementById('signupName').value;
             const email = document.getElementById('signupEmail').value;
             const password = document.getElementById('signupPassword').value;
             const confirmPassword = document.getElementById('confirmPassword').value;
-            
+
             if (!name || !email || !password || !confirmPassword) {
                 alert('Please fill in all fields');
                 return;
             }
-            
+
             if (password !== confirmPassword) {
                 alert('Passwords do not match');
                 return;
             }
-            
+
             if (password.length < 6) {
                 alert('Password must be at least 6 characters');
                 return;
             }
-            
+
             const btn = document.querySelector('#signupForm .auth-btn');
             btn.textContent = 'Signing up...';
             btn.disabled = true;
-            
+
+            // Simulate signup process
             setTimeout(() => {
-                alert('Account created successfully!');
-                btn.textContent = 'Sign Up';
-                btn.disabled = false;
-                // window.location.href = '/dashboard';
+                attemptSignup(name, email, password);
             }, 1500);
         });
+
+        function attemptLogin(email, password) {
+            // Check if user exists in localStorage (for demo purposes)
+            const users = JSON.parse(localStorage.getItem('users') || '{}');
+
+            if (users[email] && users[email].password === password) {
+                // Login successful
+                const userData = {
+                    email: email,
+                    firstName: users[email].firstName,
+                    lastName: users[email].lastName,
+                    phone: users[email].phone,
+                    preferredLocation: users[email].preferredLocation || 'kathmandu',
+                    createdAt: users[email].createdAt
+                };
+
+                // Save user session
+                localStorage.setItem('userProfile', JSON.stringify(userData));
+
+                alert('Login successful! Welcome back to QFX Cinemas.');
+                redirectToNext();
+            } else {
+                // Login failed
+                const btn = document.querySelector('#loginForm .auth-btn');
+                btn.textContent = 'Login';
+                btn.disabled = false;
+                alert('Invalid email or password. Please try again or create a new account.');
+            }
+        }
+
+        function attemptSignup(name, email, password) {
+            const users = JSON.parse(localStorage.getItem('users') || '{}');
+
+            if (users[email]) {
+                // User already exists
+                const btn = document.querySelector('#signupForm .auth-btn');
+                btn.textContent = 'Sign Up';
+                btn.disabled = false;
+                alert('An account with this email already exists. Please login instead.');
+                showLogin();
+                return;
+            }
+
+            // Create new user
+            const nameParts = name.split(' ');
+            const firstName = nameParts[0];
+            const lastName = nameParts.slice(1).join(' ');
+
+            const newUser = {
+                email: email,
+                firstName: firstName,
+                lastName: lastName,
+                password: password, // In production, this should be hashed
+                phone: '',
+                preferredLocation: 'kathmandu',
+                createdAt: new Date().toISOString()
+            };
+
+            users[email] = newUser;
+            localStorage.setItem('users', JSON.stringify(users));
+
+            // Auto-login after signup
+            const userData = {
+                email: email,
+                firstName: firstName,
+                lastName: lastName,
+                phone: '',
+                preferredLocation: 'kathmandu',
+                createdAt: newUser.createdAt
+            };
+
+            localStorage.setItem('userProfile', JSON.stringify(userData));
+
+            alert('Account created successfully! Welcome to QFX Cinemas.');
+            redirectToNext();
+        }
+
+        function redirectToNext() {
+            const redirect = localStorage.getItem('authRedirect') || 'account.html';
+            localStorage.removeItem('authRedirect');
+
+            // Check if user was in middle of booking
+            const currentBooking = localStorage.getItem('currentBooking');
+            if (currentBooking) {
+                // Continue with booking flow
+                window.location.href = 'payment.html';
+            } else {
+                window.location.href = redirect;
+            }
+        }
 
         function socialLogin(platform) {
             const platformNames = {
@@ -441,8 +559,65 @@
                 'facebook': 'Facebook',
                 'apple': 'Apple'
             };
-            alert(`Sign in with ${platformNames[platform] || platform} functionality coming soon`);
+
+            // Simulate social login
+            const mockSocialUser = {
+                email: `user_${Date.now()}@${platform}.com`,
+                firstName: platform.charAt(0).toUpperCase() + platform.slice(1) + ' User',
+                lastName: '',
+                phone: '',
+                preferredLocation: 'kathmandu',
+                createdAt: new Date().toISOString()
+            };
+
+            // Save social user session
+            localStorage.setItem('userProfile', JSON.stringify(mockSocialUser));
+
+            alert(`Signed in with ${platformNames[platform] || platform} successfully!`);
+            redirectToNext();
         }
+
+        // Forgot password handler
+        document.querySelector('.forgot-password').addEventListener('click', function(e) {
+            e.preventDefault();
+            const email = prompt('Enter your email address for password reset:');
+
+            if (email) {
+                // In production, this would send an email
+                alert(`Password reset link has been sent to ${email}. Please check your email.`);
+            }
+        });
+
+        // Create some demo users for testing
+        function createDemoUsers() {
+            const users = {
+                'demo@qfx.com': {
+                    email: 'demo@qfx.com',
+                    firstName: 'Demo',
+                    lastName: 'User',
+                    password: 'demo123',
+                    phone: '9876543210',
+                    preferredLocation: 'kathmandu',
+                    createdAt: '2024-01-01T00:00:00.000Z'
+                },
+                'test@example.com': {
+                    email: 'test@example.com',
+                    firstName: 'Test',
+                    lastName: 'User',
+                    password: 'test123',
+                    phone: '9865432109',
+                    preferredLocation: 'pokhara',
+                    createdAt: '2024-02-01T00:00:00.000Z'
+                }
+            };
+
+            if (!localStorage.getItem('users')) {
+                localStorage.setItem('users', JSON.stringify(users));
+            }
+        }
+
+        // Initialize demo users
+        createDemoUsers();
     </script>
 </body>
 </html>

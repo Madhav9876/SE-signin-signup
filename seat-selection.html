@@ -1,0 +1,1055 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Select Seats - QFX Cinemas</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 50%, #7e22ce 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        /* Header Styles */
+        header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .header-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 28px;
+            font-weight: 800;
+            background: linear-gradient(45deg, #e63946, #f77f00);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-decoration: none;
+        }
+
+        .progress-indicator {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            color: #666;
+            font-size: 14px;
+        }
+
+        .progress-step {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .progress-step.active {
+            color: #e63946;
+            font-weight: 600;
+        }
+
+        .progress-step.completed {
+            color: #22c55e;
+        }
+
+        /* Main Content */
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Booking Summary Card */
+        .booking-summary {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 25px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .summary-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .movie-info {
+            flex: 1;
+        }
+
+        .movie-title {
+            font-size: 24px;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .movie-details {
+            color: #666;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .booking-time {
+            text-align: right;
+            color: #666;
+            font-size: 14px;
+        }
+
+        .booking-time .time {
+            font-size: 18px;
+            font-weight: 600;
+            color: #e63946;
+        }
+
+        /* Seat Selection Area */
+        .seat-selection-area {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .screen-container {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .screen {
+            background: linear-gradient(to bottom, #e0e0e0, #f0f0f0);
+            height: 60px;
+            border-radius: 50% / 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            color: #666;
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+            margin-bottom: 10px;
+        }
+
+        .screen-label {
+            font-size: 12px;
+            color: #999;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* Seat Map */
+        .seat-map-container {
+            overflow-x: auto;
+            padding: 20px 0;
+        }
+
+        .seat-map {
+            min-width: 600px;
+            margin: 0 auto;
+        }
+
+        .seat-category {
+            margin-bottom: 30px;
+        }
+
+        .category-header {
+            text-align: center;
+            font-weight: 600;
+            color: #666;
+            margin-bottom: 15px;
+            padding: 10px;
+            background: #f8f9fa;
+            border-radius: 10px;
+        }
+
+        .seat-row {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 8px;
+            gap: 8px;
+        }
+
+        .row-label {
+            width: 30px;
+            text-align: center;
+            font-weight: 600;
+            color: #666;
+            font-size: 14px;
+        }
+
+        .seat {
+            width: 32px;
+            height: 32px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+            font-weight: 600;
+            position: relative;
+        }
+
+        .seat:hover:not(.occupied) {
+            transform: scale(1.1);
+            border-color: #e63946;
+        }
+
+        .seat.available {
+            background: white;
+            color: #666;
+        }
+
+        .seat.selected {
+            background: #e63946;
+            border-color: #e63946;
+            color: white;
+        }
+
+        .seat.occupied {
+            background: #6b7280;
+            border-color: #6b7280;
+            color: white;
+            cursor: not-allowed;
+            opacity: 0.7;
+        }
+
+        .seat.premium {
+            border-color: #fbbf24;
+            background: #fef3c7;
+        }
+
+        .seat.premium.selected {
+            background: #f59e0b;
+            border-color: #f59e0b;
+        }
+
+        .seat.wheelchair {
+            border-color: #22c55e;
+            background: #d1fae5;
+        }
+
+        .seat.wheelchair.selected {
+            background: #22c55e;
+            border-color: #22c55e;
+        }
+
+        .seat-number {
+            font-size: 8px;
+            position: absolute;
+            bottom: 1px;
+            right: 2px;
+        }
+
+        /* Seat Legend */
+        .seat-legend {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #e2e8f0;
+            flex-wrap: wrap;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 14px;
+            color: #666;
+        }
+
+        .legend-seat {
+            width: 24px;
+            height: 24px;
+            border: 2px solid #ddd;
+            border-radius: 6px;
+        }
+
+        .legend-seat.available {
+            background: white;
+        }
+
+        .legend-seat.selected {
+            background: #e63946;
+            border-color: #e63946;
+        }
+
+        .legend-seat.occupied {
+            background: #6b7280;
+            border-color: #6b7280;
+        }
+
+        .legend-seat.premium {
+            background: #fef3c7;
+            border-color: #fbbf24;
+        }
+
+        /* Booking Details Sidebar */
+        .booking-sidebar {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 25px;
+            position: sticky;
+            top: 100px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .sidebar-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #e2e8f0;
+        }
+
+        .selected-seats {
+            margin-bottom: 20px;
+        }
+
+        .selected-seats-title {
+            font-weight: 600;
+            color: #666;
+            margin-bottom: 10px;
+            font-size: 14px;
+        }
+
+        .seat-chip {
+            display: inline-block;
+            background: #e63946;
+            color: white;
+            padding: 6px 12px;
+            border-radius: 15px;
+            font-size: 12px;
+            margin: 2px;
+            font-weight: 500;
+        }
+
+        .empty-seats {
+            color: #999;
+            font-style: italic;
+            font-size: 14px;
+        }
+
+        .price-breakdown {
+            margin-bottom: 20px;
+        }
+
+        .price-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        .price-label {
+            color: #666;
+        }
+
+        .price-value {
+            font-weight: 600;
+            color: #333;
+        }
+
+        .price-total {
+            border-top: 2px solid #e2e8f0;
+            padding-top: 10px;
+            margin-top: 10px;
+        }
+
+        .price-total .price-label {
+            font-weight: 600;
+            color: #333;
+            font-size: 16px;
+        }
+
+        .price-total .price-value {
+            color: #e63946;
+            font-size: 18px;
+            font-weight: 700;
+        }
+
+        .booking-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .btn {
+            padding: 12px 20px;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            flex: 1;
+            min-height: 50px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #e63946 0%, #f77f00 100%);
+            color: white;
+        }
+
+        .btn-primary:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(230, 57, 70, 0.3);
+        }
+
+        .btn-primary:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .btn-secondary {
+            background: #e2e8f0;
+            color: #666;
+        }
+
+        .btn-secondary:hover {
+            background: #cbd5e0;
+        }
+
+        /* Layout Grid */
+        .content-grid {
+            display: grid;
+            grid-template-columns: 1fr 350px;
+            gap: 30px;
+            align-items: start;
+        }
+
+        /* Loading State */
+        .loading {
+            text-align: center;
+            padding: 60px 20px;
+            color: #666;
+        }
+
+        .spinner {
+            border: 3px solid #e2e8f0;
+            border-radius: 50%;
+            border-top: 3px solid #e63946;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Alert Messages */
+        .alert {
+            padding: 15px 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            font-size: 14px;
+        }
+
+        .alert-warning {
+            background: #fef3c7;
+            border: 1px solid #fbbf24;
+            color: #92400e;
+        }
+
+        .alert-info {
+            background: #dbeafe;
+            border: 1px solid #60a5fa;
+            color: #1e40af;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            .content-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .booking-sidebar {
+                position: relative;
+                top: auto;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .header-container {
+                padding: 15px;
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .logo {
+                font-size: 24px;
+            }
+
+            .progress-indicator {
+                font-size: 12px;
+            }
+
+            .seat {
+                width: 28px;
+                height: 28px;
+                font-size: 8px;
+            }
+
+            .booking-actions {
+                flex-direction: column;
+            }
+
+            .summary-header {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .booking-time {
+                text-align: center;
+            }
+
+            .seat-legend {
+                gap: 15px;
+            }
+        }
+
+        /* Utility Classes */
+        .text-center {
+            text-align: center;
+        }
+
+        .mb-20 {
+            margin-bottom: 20px;
+        }
+
+        .mt-20 {
+            margin-top: 20px;
+        }
+
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-container">
+            <a href="index.html" class="logo">QFX Cinemas</a>
+            <div class="progress-indicator">
+                <div class="progress-step completed">
+                    ✓ Movie
+                </div>
+                <div class="progress-step completed">
+                    ✓ Showtime
+                </div>
+                <div class="progress-step active">
+                    → Seats
+                </div>
+                <div class="progress-step">
+                    Payment
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+        <!-- Booking Summary -->
+        <div class="booking-summary">
+            <div class="summary-header">
+                <div class="movie-info">
+                    <div class="movie-title" id="movieTitle">Loading...</div>
+                    <div class="movie-details" id="movieDetails">
+                        Loading movie and showtime details...
+                    </div>
+                </div>
+                <div class="booking-time">
+                    <div id="showDate">Loading...</div>
+                    <div class="time" id="showTime">Loading...</div>
+                    <div id="cinemaName">Loading...</div>
+                </div>
+            </div>
+        </div>
+
+        <div id="alertContainer"></div>
+
+        <div class="content-grid">
+            <!-- Seat Selection Area -->
+            <div class="seat-selection-area">
+                <div class="screen-container">
+                    <div class="screen">SCREEN</div>
+                    <div class="screen-label">All seats face this direction</div>
+                </div>
+
+                <div class="seat-map-container" id="seatMapContainer">
+                    <div class="loading">
+                        <div class="spinner"></div>
+                        <p>Loading seat map...</p>
+                    </div>
+                </div>
+
+                <div class="seat-legend">
+                    <div class="legend-item">
+                        <div class="legend-seat available"></div>
+                        <span>Available</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-seat selected"></div>
+                        <span>Selected</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-seat occupied"></div>
+                        <span>Occupied</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-seat premium"></div>
+                        <span>Premium</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-seat wheelchair"></div>
+                        <span>Accessible</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Booking Sidebar -->
+            <div class="booking-sidebar">
+                <div class="sidebar-title">Booking Details</div>
+
+                <div class="selected-seats">
+                    <div class="selected-seats-title">Selected Seats</div>
+                    <div id="selectedSeatsDisplay">
+                        <div class="empty-seats">No seats selected</div>
+                    </div>
+                </div>
+
+                <div class="price-breakdown">
+                    <div class="price-item">
+                        <span class="price-label">Base Price (Rs <span id="basePrice">0</span> × <span id="seatCount">0</span> seats)</span>
+                        <span class="price-value">Rs <span id="baseTotal">0</span></span>
+                    </div>
+                    <div class="price-item" id="premiumCharge" style="display: none;">
+                        <span class="price-label">Premium Charge</span>
+                        <span class="price-value">Rs <span id="premiumTotal">0</span></span>
+                    </div>
+                    <div class="price-item">
+                        <span class="price-label">Convenience Fee</span>
+                        <span class="price-value">Rs <span id="convenienceFee">25</span></span>
+                    </div>
+                    <div class="price-total">
+                        <div class="price-item">
+                            <span class="price-label">Total Amount</span>
+                            <span class="price-value">Rs <span id="totalAmount">0</span></span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="booking-actions">
+                    <button class="btn btn-secondary" onclick="goBack()">
+                        ← Back
+                    </button>
+                    <button class="btn btn-primary" id="proceedBtn" onclick="proceedToPayment()" disabled>
+                        Continue →
+                    </button>
+                </div>
+
+                <div class="alert alert-info" style="margin-top: 20px; font-size: 12px;">
+                    <strong>Important:</strong> Maximum 8 seats per booking. Seats cannot be changed after payment.
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/movie-service.js"></script>
+    <script src="js/cinema-service.js"></script>
+    <script src="js/showtime-service.js"></script>
+    <script src="js/seat-service.js"></script>
+    <script>
+        let currentBooking = null;
+        let selectedSeats = [];
+        let seatMap = null;
+
+        // Initialize page
+        document.addEventListener('DOMContentLoaded', function() {
+            loadCurrentBooking();
+        });
+
+        function loadCurrentBooking() {
+            try {
+                const bookingData = localStorage.getItem('currentBooking');
+                if (!bookingData) {
+                    showAlert('No booking found. Please start over.', 'warning');
+                    setTimeout(() => {
+                        window.location.href = 'index.html';
+                    }, 3000);
+                    return;
+                }
+
+                currentBooking = JSON.parse(bookingData);
+                renderBookingSummary();
+                loadSeatMap();
+            } catch (error) {
+                console.error('Error loading booking:', error);
+                showAlert('Error loading booking information', 'warning');
+            }
+        }
+
+        async function renderBookingSummary() {
+            if (!currentBooking) return;
+
+            try {
+                // Wait for movie service to load
+                if (!movieService.movies) {
+                    await movieService.loadMovieData();
+                }
+
+                const movie = movieService.getMovieById(currentBooking.movieId);
+                const cinema = cinemaService.getCinemaById(currentBooking.cinemaId, currentBooking.location);
+                const screen = cinema ? cinema.screens.find(s => s.id === currentBooking.screenId) : null;
+
+                if (movie) {
+                    document.getElementById('movieTitle').textContent = movie.title;
+                }
+
+                if (cinema && screen) {
+                    const details = [];
+                    details.push(`${cinema.name} - ${screen.type}`);
+                    details.push(`${screen.capacity} seats capacity`);
+                    if (movie) {
+                        details.push(`${movie.duration} • ${movie.rating} • ${movie.language}`);
+                    }
+
+                    document.getElementById('movieDetails').innerHTML = details.join(' • ');
+                    document.getElementById('cinemaName').textContent = cinema.name;
+                }
+
+                // Format date and time
+                const showDate = new Date(currentBooking.date);
+                document.getElementById('showDate').textContent = showDate.toLocaleDateString('en-US', {
+                    weekday: 'long',
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric'
+                });
+
+                document.getElementById('showTime').textContent = formatShowtime(currentBooking.time);
+
+            } catch (error) {
+                console.error('Error rendering booking summary:', error);
+            }
+        }
+
+        function formatShowtime(time) {
+            // Format time like "2:30 PM" -> "2:30 PM"
+            return time;
+        }
+
+        async function loadSeatMap() {
+            try {
+                if (!seatService) {
+                    // Create seat service if not loaded
+                    await loadSeatService();
+                }
+
+                if (!currentBooking) return;
+
+                seatMap = await seatService.generateSeatMap(
+                    currentBooking.cinemaId,
+                    currentBooking.screenId,
+                    currentBooking.date,
+                    currentBooking.time
+                );
+
+                renderSeatMap();
+            } catch (error) {
+                console.error('Error loading seat map:', error);
+                document.getElementById('seatMapContainer').innerHTML =
+                    '<div class="text-center" style="color: #666;">Error loading seat map</div>';
+            }
+        }
+
+        async function loadSeatService() {
+            // This would normally be loaded from the seat-service.js file
+            // For now, we'll create a simple implementation
+            if (typeof seatService === 'undefined') {
+                window.seatService = new SeatService();
+            }
+        }
+
+        function renderSeatMap() {
+            if (!seatMap) return;
+
+            const container = document.getElementById('seatMapContainer');
+            let html = '<div class="seat-map">';
+
+            // Render each category
+            Object.entries(seatMap.categories).forEach(([categoryName, category]) => {
+                html += `<div class="seat-category">
+                    <div class="category-header">${categoryName} - Rs ${category.basePrice}</div>`;
+
+                // Render seat rows
+                category.rows.forEach(row => {
+                    html += `<div class="seat-row">
+                        <div class="row-label">${row.name}</div>`;
+
+                    row.seats.forEach(seat => {
+                        const seatClass = getSeatClass(seat);
+                        const seatId = `${categoryName}-${row.name}-${seat.number}`;
+
+                        html += `<div class="seat ${seatClass}"
+                                    id="seat-${seatId}"
+                                    data-seat='${JSON.stringify(seat)}'
+                                    onclick="toggleSeat('${seatId}')"
+                                    ${!seat.available ? 'disabled' : ''}>
+                            ${seat.number}
+                            <span class="seat-number">${seat.number}</span>
+                        </div>`;
+                    });
+
+                    html += '</div>';
+                });
+
+                html += '</div>';
+            });
+
+            html += '</div>';
+            container.innerHTML = html;
+        }
+
+        function getSeatClass(seat) {
+            if (!seat.available) return 'occupied';
+            if (seat.selected) return 'selected';
+            if (seat.isPremium) return 'premium';
+            if (seat.isWheelchair) return 'wheelchair';
+            return 'available';
+        }
+
+        function toggleSeat(seatId) {
+            const seatElement = document.getElementById(`seat-${seatId}`);
+            if (!seatElement) return;
+
+            const seatData = JSON.parse(seatElement.dataset.seat);
+
+            if (!seatData.available) return;
+
+            if (seatData.selected) {
+                // Deselect seat
+                seatData.selected = false;
+                selectedSeats = selectedSeats.filter(s => s.id !== seatId);
+            } else {
+                // Select seat
+                if (selectedSeats.length >= 8) {
+                    showAlert('Maximum 8 seats allowed per booking', 'warning');
+                    return;
+                }
+
+                seatData.selected = true;
+                selectedSeats.push(seatData);
+            }
+
+            // Update seat element
+            seatElement.className = `seat ${getSeatClass(seatData)}`;
+            seatElement.dataset.seat = JSON.stringify(seatData);
+
+            // Update display
+            updateSelectedSeatsDisplay();
+            updatePriceCalculation();
+        }
+
+        function updateSelectedSeatsDisplay() {
+            const container = document.getElementById('selectedSeatsDisplay');
+
+            if (selectedSeats.length === 0) {
+                container.innerHTML = '<div class="empty-seats">No seats selected</div>';
+                document.getElementById('proceedBtn').disabled = true;
+            } else {
+                const seatChips = selectedSeats.map(seat => {
+                    const categoryName = Object.keys(seatMap.categories).find(cat =>
+                        seatMap.categories[cat].rows.some(row => row.seats.includes(seat))
+                    );
+                    return `<span class="seat-chip">${seat.category} ${seat.row} ${seat.number}</span>`;
+                }).join('');
+
+                container.innerHTML = seatChips;
+                document.getElementById('proceedBtn').disabled = false;
+            }
+        }
+
+        function updatePriceCalculation() {
+            if (!seatMap || selectedSeats.length === 0) {
+                document.getElementById('seatCount').textContent = '0';
+                document.getElementById('basePrice').textContent = '0';
+                document.getElementById('baseTotal').textContent = '0';
+                document.getElementById('premiumTotal').textContent = '0';
+                document.getElementById('totalAmount').textContent = '25';
+                document.getElementById('premiumCharge').style.display = 'none';
+                return;
+            }
+
+            let baseTotal = 0;
+            let premiumTotal = 0;
+
+            selectedSeats.forEach(seat => {
+                const categoryName = Object.keys(seatMap.categories).find(cat =>
+                    seatMap.categories[cat].rows.some(row => row.seats.includes(seat))
+                );
+
+                const category = seatMap.categories[categoryName];
+                if (category) {
+                    const basePrice = category.basePrice;
+                    baseTotal += basePrice;
+
+                    if (seat.isPremium) {
+                        premiumTotal += Math.round(basePrice * 0.5); // 50% premium charge
+                    }
+                }
+            });
+
+            const convenienceFee = 25;
+            const total = baseTotal + premiumTotal + convenienceFee;
+
+            document.getElementById('seatCount').textContent = selectedSeats.length;
+            document.getElementById('basePrice').textContent = Math.round(baseTotal / selectedSeats.length);
+            document.getElementById('baseTotal').textContent = baseTotal;
+            document.getElementById('premiumTotal').textContent = premiumTotal;
+            document.getElementById('totalAmount').textContent = total;
+
+            document.getElementById('premiumCharge').style.display = premiumTotal > 0 ? 'flex' : 'none';
+        }
+
+        function proceedToPayment() {
+            if (selectedSeats.length === 0) {
+                showAlert('Please select at least one seat', 'warning');
+                return;
+            }
+
+            // Update booking data with selected seats
+            currentBooking.selectedSeats = selectedSeats;
+            currentBooking.totalAmount = parseInt(document.getElementById('totalAmount').textContent);
+
+            // Save updated booking
+            localStorage.setItem('currentBooking', JSON.stringify(currentBooking));
+
+            // Redirect to payment
+            window.location.href = 'payment.html';
+        }
+
+        function goBack() {
+            // Go back to movie details
+            if (currentBooking && currentBooking.movieId) {
+                window.location.href = `movie-details.html?id=${currentBooking.movieId}`;
+            } else {
+                window.location.href = 'index.html';
+            }
+        }
+
+        function showAlert(message, type = 'info') {
+            const alertContainer = document.getElementById('alertContainer');
+            const alertClass = type === 'warning' ? 'alert-warning' : 'alert-info';
+
+            const alertHtml = `
+                <div class="alert ${alertClass}">
+                    ${message}
+                </div>
+            `;
+
+            alertContainer.innerHTML = alertHtml;
+
+            // Auto-hide after 5 seconds
+            setTimeout(() => {
+                alertContainer.innerHTML = '';
+            }, 5000);
+        }
+
+        // Create basic seat service if not loaded
+        class SeatService {
+            async generateSeatMap(cinemaId, screenId, date, time) {
+                // This is a simplified version - the full implementation would be in seat-service.js
+                const cinema = cinemaService.getCinemaById(cinemaId);
+                const screen = cinema ? cinema.screens.find(s => s.id === screenId) : null;
+
+                if (!screen) return null;
+
+                const categories = {};
+
+                Object.entries(screen.seatingCategories).forEach(([categoryName, config]) => {
+                    const rows = [];
+
+                    config.rows.forEach(rowName => {
+                        const seats = [];
+                        for (let i = 1; i <= config.seatsPerRow; i++) {
+                            // Simulate some seats being occupied
+                            const isOccupied = Math.random() < 0.3; // 30% chance of being occupied
+                            const isPremium = categoryName === 'Platinum';
+                            const isWheelchair = i <= 2 && rowName === 'A'; // First 2 seats of first row
+
+                            seats.push({
+                                id: `${categoryName}-${rowName}-${i}`,
+                                category: categoryName,
+                                row: rowName,
+                                number: i,
+                                available: !isOccupied,
+                                selected: false,
+                                isPremium,
+                                isWheelchair,
+                                price: config.price
+                            });
+                        }
+
+                        rows.push({
+                            name: rowName,
+                            seats: seats
+                        });
+                    });
+
+                    categories[categoryName] = {
+                        basePrice: config.price,
+                        rows: rows
+                    };
+                });
+
+                return { categories };
+            }
+        }
+
+        // Initialize seat service if not available
+        if (typeof seatService === 'undefined') {
+            window.seatService = new SeatService();
+        }
+    </script>
+</body>
+</html>

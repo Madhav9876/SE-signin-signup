@@ -1,0 +1,242 @@
+{
+  "now_showing": [
+    {
+      "id": "blockbuster",
+      "title": "Blockbuster Action",
+      "poster_url": "https://via.placeholder.com/300x450/e63946/ffffff?text=Blockbuster",
+      "backdrop_url": "https://via.placeholder.com/1920x1080/e63946/ffffff?text=Blockbuster+Back",
+      "synopsis": "An adrenaline-pumping action thriller that follows an elite special forces team on a mission to save the world from a terrorist threat. With jaw-dropping stunts and intense combat sequences.",
+      "cast": ["John Smith", "Sarah Johnson", "Mike Chen", "Emma Wilson"],
+      "director": "James Director",
+      "genre": ["Action", "Thriller", "Adventure"],
+      "duration": "2h 30min",
+      "rating": "UA",
+      "language": "English",
+      "release_date": "2024-01-15",
+      "trailer_url": "https://example.com/trailer1",
+      "imdb_rating": 8.2,
+      "showtimes": {
+        "kathmandu": {
+          "qfx_kumari": ["10:00 AM", "1:30 PM", "5:00 PM", "8:30 PM"],
+          "qfx_civil_mall": ["11:00 AM", "2:30 PM", "6:00 PM", "9:30 PM"],
+          "qfx_bhrikutimandap": ["9:30 AM", "12:45 PM", "4:15 PM", "7:45 PM"]
+        },
+        "pokhara": {
+          "qfx_lakeside": ["10:30 AM", "2:00 PM", "5:30 PM", "9:00 PM"]
+        },
+        "lalitpur": {
+          "qfx_patan": ["11:15 AM", "3:00 PM", "6:45 PM", "10:15 PM"]
+        }
+      }
+    },
+    {
+      "id": "epic-drama",
+      "title": "Epic Drama",
+      "poster_url": "https://via.placeholder.com/300x450/7e22ce/ffffff?text=Epic+Drama",
+      "backdrop_url": "https://via.placeholder.com/1920x1080/7e22ce/ffffff?text=Epic+Drama+Back",
+      "synopsis": "A powerful story of love, loss, and redemption set against the backdrop of war. This emotionally charged drama explores the resilience of the human spirit in times of adversity.",
+      "cast": ["Emily Roberts", "David Kim", "Sofia Martinez", "Robert Johnson"],
+      "director": "Maria Filmmaker",
+      "genre": ["Drama", "Romance", "War"],
+      "duration": "2h 15min",
+      "rating": "U/A",
+      "language": "English",
+      "release_date": "2024-02-01",
+      "trailer_url": "https://example.com/trailer2",
+      "imdb_rating": 7.8,
+      "showtimes": {
+        "kathmandu": {
+          "qfx_kumari": ["11:30 AM", "3:15 PM", "7:00 PM"],
+          "qfx_civil_mall": ["10:45 AM", "2:30 PM", "6:15 PM", "9:45 PM"]
+        },
+        "pokhara": {
+          "qfx_lakeside": ["12:00 PM", "4:00 PM", "8:00 PM"]
+        }
+      }
+    },
+    {
+      "id": "comedy-gold",
+      "title": "Comedy Gold",
+      "poster_url": "https://via.placeholder.com/300x450/f77f00/ffffff?text=Comedy+Gold",
+      "backdrop_url": "https://via.placeholder.com/1920x1080/f77f00/ffffff?text=Comedy+Gold+Back",
+      "synopsis": "A laugh-out-loud comedy about a group of friends whose vacation goes hilariously wrong. Packed with witty dialogue and hilarious situations that will leave you in stitches.",
+      "cast": ["Chris Funny", "Amy Laugh", "Tom Jokester", "Lisa Humor"],
+      "director": "Steve Comedy",
+      "genre": ["Comedy", "Family"],
+      "duration": "1h 50min",
+      "rating": "U",
+      "language": "English",
+      "release_date": "2024-02-10",
+      "trailer_url": "https://example.com/trailer3",
+      "imdb_rating": 7.1,
+      "showtimes": {
+        "kathmandu": {
+          "qfx_kumari": ["10:00 AM", "12:30 PM", "3:00 PM", "5:30 PM", "8:00 PM"],
+          "qfx_civil_mall": ["11:15 AM", "1:45 PM", "4:15 PM", "6:45 PM", "9:15 PM"],
+          "qfx_bhrikutimandap": ["9:45 AM", "12:15 PM", "2:45 PM", "5:15 PM", "7:45 PM"]
+        },
+        "lalitpur": {
+          "qfx_patan": ["10:30 AM", "1:00 PM", "3:30 PM", "6:00 PM", "8:30 PM"]
+        }
+      }
+    },
+    {
+      "id": "horror-nights",
+      "title": "Horror Nights",
+      "poster_url": "https://via.placeholder.com/300x450/000000/ffffff?text=Horror+Nights",
+      "backdrop_url": "https://via.placeholder.com/1920x1080/000000/ffffff?text=Horror+Nights+Back",
+      "synopsis": "A terrifying horror film that follows a group of friends who spend the night in a haunted mansion. Not everyone will make it till dawn.",
+      "cast": ["Scary Actor", "Fearless Star", "Haunted Soul", "Dark Shadow"],
+      "director": "Creep Master",
+      "genre": ["Horror", "Thriller"],
+      "duration": "2h 5min",
+      "rating": "A",
+      "language": "English",
+      "release_date": "2024-02-05",
+      "trailer_url": "https://example.com/trailer4",
+      "imdb_rating": 6.8,
+      "showtimes": {
+        "kathmandu": {
+          "qfx_kumari": ["9:00 PM", "11:45 PM"],
+          "qfx_civil_mall": ["10:15 PM", "1:00 AM"]
+        },
+        "pokhara": {
+          "qfx_lakeside": ["9:30 PM"]
+        }
+      }
+    },
+    {
+      "id": "kids-adventure",
+      "title": "Kids Adventure",
+      "poster_url": "https://via.placeholder.com/300x450/22c55e/ffffff?text=Kids+Adventure",
+      "backdrop_url": "https://via.placeholder.com/1920x1080/22c55e/ffffff?text=Kids+Adventure+Back",
+      "synopsis": "An exciting animated adventure perfect for the whole family. Join young heroes on their magical journey to save their kingdom from an evil wizard.",
+      "cast": ["Voice Actor 1", "Voice Actor 2", "Voice Actor 3"],
+      "director": "Animation Studio",
+      "genre": ["Animation", "Adventure", "Family"],
+      "duration": "1h 40min",
+      "rating": "U",
+      "language": "English",
+      "release_date": "2024-01-20",
+      "trailer_url": "https://example.com/trailer5",
+      "imdb_rating": 7.5,
+      "showtimes": {
+        "kathmandu": {
+          "qfx_kumari": ["10:30 AM", "1:00 PM", "3:30 PM"],
+          "qfx_civil_mall": ["11:45 AM", "2:15 PM", "4:45 PM"],
+          "qfx_bhrikutimandap": ["10:00 AM", "12:30 PM", "3:00 PM"]
+        },
+        "lalitpur": {
+          "qfx_patan": ["11:00 AM", "1:30 PM", "4:00 PM"]
+        }
+      }
+    },
+    {
+      "id": "romantic-comedy",
+      "title": "Romantic Comedy",
+      "poster_url": "https://via.placeholder.com/300x450/ec4899/ffffff?text=Romantic+Comedy",
+      "backdrop_url": "https://via.placeholder.com/1920x1080/ec4899/ffffff?text=Romantic+Comedy+Back",
+      "synopsis": "A charming romantic comedy about two opposites who meet in the most unexpected circumstances and discover that love can bloom anywhere.",
+      "cast": ["Love Hero", "Romance Star", "Comic Relief", "Wise Friend"],
+      "director": "Love Story Master",
+      "genre": ["Romance", "Comedy"],
+      "duration": "2h 0min",
+      "rating": "U/A",
+      "language": "English",
+      "release_date": "2024-02-08",
+      "trailer_url": "https://example.com/trailer6",
+      "imdb_rating": 6.9,
+      "showtimes": {
+        "kathmandu": {
+          "qfx_kumari": ["11:00 AM", "2:15 PM", "5:30 PM", "8:45 PM"],
+          "qfx_civil_mall": ["10:30 AM", "1:45 PM", "5:00 PM", "8:15 PM"]
+        },
+        "pokhara": {
+          "qfx_lakeside": ["12:15 PM", "3:30 PM", "6:45 PM"]
+        }
+      }
+    }
+  ],
+  "coming_soon": [
+    {
+      "id": "sci-fi-epic",
+      "title": "Sci-Fi Epic",
+      "poster_url": "https://via.placeholder.com/300x450/06b6d4/ffffff?text=Sci-Fi+Epic",
+      "backdrop_url": "https://via.placeholder.com/1920x1080/06b6d4/ffffff?text=Sci-Fi+Epic+Back",
+      "synopsis": "A groundbreaking science fiction adventure that takes you to the far reaches of space and time. Experience the future of cinema with stunning visuals and an epic storyline.",
+      "cast": ["Space Hero", "Alien Friend", "Robot Sidekick", "Captain Future"],
+      "director": "Future Visionary",
+      "genre": ["Sci-Fi", "Adventure", "Action"],
+      "duration": "2h 45min",
+      "rating": "UA",
+      "language": "English",
+      "release_date": "2024-03-15",
+      "trailer_url": "https://example.com/trailer7",
+      "imdb_rating": 8.5
+    },
+    {
+      "id": "mystery-thriller",
+      "title": "Mystery Thriller",
+      "poster_url": "https://via.placeholder.com/300x450/64748b/ffffff?text=Mystery+Thriller",
+      "backdrop_url": "https://via.placeholder.com/1920x1080/64748b/ffffff?text=Mystery+Thriller+Back",
+      "synopsis": "A gripping psychological thriller that will keep you guessing until the very end. Nothing is what it seems in this tale of deception and intrigue.",
+      "cast": ["Detective Mind", "Suspect One", "Witness X", "Profiler Genius"],
+      "director": "Suspense Master",
+      "genre": ["Mystery", "Thriller", "Crime"],
+      "duration": "2h 20min",
+      "rating": "A",
+      "language": "English",
+      "release_date": "2024-03-22",
+      "trailer_url": "https://example.com/trailer8",
+      "imdb_rating": 7.9
+    },
+    {
+      "id": "family-drama",
+      "title": "Family Drama",
+      "poster_url": "https://via.placeholder.com/300x450/0891b2/ffffff?text=Family+Drama",
+      "backdrop_url": "https://via.placeholder.com/1920x1080/0891b2/ffffff?text=Family+Drama+Back",
+      "synopsis": "A heartwarming family drama about the bonds that tie us together and the love that conquers all obstacles. Perfect for a family movie outing.",
+      "cast": ["Family Dad", "Caring Mom", "Rebellious Teen", "Wise Grandparent"],
+      "director": "Heart Touch Director",
+      "genre": ["Drama", "Family"],
+      "duration": "2h 10min",
+      "rating": "U",
+      "language": "English",
+      "release_date": "2024-03-29",
+      "trailer_url": "https://example.com/trailer9",
+      "imdb_rating": 7.6
+    },
+    {
+      "id": "action-sequel",
+      "title": "Action Sequel",
+      "poster_url": "https://via.placeholder.com/300x450/dc2626/ffffff?text=Action+Sequel",
+      "backdrop_url": "https://via.placeholder.com/1920x1080/dc2626/ffffff?text=Action+Sequel+Back",
+      "synopsis": "The much-awaited sequel to the blockbuster action hit. Double the action, triple the thrills, and explosive entertainment guaranteed.",
+      "cast": ["Returning Hero", "New Villain", "Sidekick Pro", "Love Interest"],
+      "director": "Action Master 2",
+      "genre": ["Action", "Adventure", "Thriller"],
+      "duration": "2h 35min",
+      "rating": "UA",
+      "language": "English",
+      "release_date": "2024-04-05",
+      "trailer_url": "https://example.com/trailer10",
+      "imdb_rating": 8.0
+    },
+    {
+      "id": "documentary-film",
+      "title": "Nature Documentary",
+      "poster_url": "https://via.placeholder.com/300x450/16a34a/ffffff?text=Nature+Doc",
+      "backdrop_url": "https://via.placeholder.com/1920x1080/16a34a/ffffff?text=Nature+Doc+Back",
+      "synopsis": "An awe-inspiring documentary showcasing the wonders of our natural world. Filmed over five years across all seven continents.",
+      "cast": ["Mother Nature", "Wild Animals", "Natural Beauty"],
+      "director": "Planet Earth Team",
+      "genre": ["Documentary", "Nature"],
+      "duration": "1h 30min",
+      "rating": "U",
+      "language": "English",
+      "release_date": "2024-04-12",
+      "trailer_url": "https://example.com/trailer11",
+      "imdb_rating": 8.3
+    }
+  ]
+}
