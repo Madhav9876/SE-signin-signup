@@ -643,6 +643,35 @@
 
     <script src="js/movie-service.js"></script>
     <script>
+        // Check authentication state on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            checkAuthentication();
+        });
+
+        function checkAuthentication() {
+            const userData = localStorage.getItem('userProfile');
+            const loginBtn = document.getElementById('loginBtn');
+
+            if (userData && loginBtn) {
+                try {
+                    const user = JSON.parse(userData);
+                    const initials = (user.firstName?.charAt(0) || 'U') + (user.lastName?.charAt(0) || '');
+
+                    // Update navigation to show user is logged in
+                    loginBtn.innerHTML = `
+                        <div style="display: flex; align-items: center; gap: 8px;">
+                            <div style="width: 24px; height: 24px; border-radius: 50%; background: rgba(255,255,255,0.2); display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 600;">
+                                ${initials}
+                            </div>
+                            <span>${user.firstName}</span>
+                        </div>
+                    `;
+                    loginBtn.href = 'account.html';
+                } catch (error) {
+                    console.error('Error parsing user data:', error);
+                }
+            }
+        }
         // Carousel functionality
         let currentSlide = 0;
         const slides = document.querySelectorAll('.carousel-item');
