@@ -1,0 +1,1065 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Movie Details - QFX Cinemas</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 50%, #7e22ce 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        /* Header Styles (reused from index.html) */
+        header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .header-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 32px;
+            font-weight: 800;
+            background: linear-gradient(45deg, #e63946, #f77f00);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-decoration: none;
+        }
+
+        nav ul {
+            list-style: none;
+            display: flex;
+            gap: 30px;
+            align-items: center;
+        }
+
+        nav a {
+            text-decoration: none;
+            color: #333;
+            font-weight: 500;
+            font-size: 16px;
+            transition: color 0.3s ease;
+        }
+
+        nav a:hover {
+            color: #e63946;
+        }
+
+        .location-selector {
+            padding: 8px 15px;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            background: white;
+            font-size: 14px;
+            cursor: pointer;
+        }
+
+        .login-btn {
+            background: linear-gradient(135deg, #e63946 0%, #f77f00 100%);
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: none;
+        }
+
+        /* Movie Hero Section */
+        .movie-hero {
+            position: relative;
+            height: 60vh;
+            overflow: hidden;
+        }
+
+        .movie-backdrop {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-size: cover;
+            background-position: center;
+            filter: brightness(0.3);
+        }
+
+        .movie-hero-content {
+            position: relative;
+            z-index: 2;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            padding: 0 20px;
+        }
+
+        .movie-hero-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 300px 1fr;
+            gap: 40px;
+            align-items: center;
+            width: 100%;
+        }
+
+        .movie-poster {
+            width: 100%;
+            height: 450px;
+            background-size: cover;
+            background-position: center;
+            border-radius: 15px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .movie-rating-badge {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: rgba(255, 193, 7, 0.9);
+            color: #333;
+            padding: 8px 15px;
+            border-radius: 8px;
+            font-weight: 700;
+            font-size: 16px;
+        }
+
+        .movie-info {
+            color: white;
+        }
+
+        .movie-title {
+            font-size: 48px;
+            font-weight: 800;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+        }
+
+        .movie-meta {
+            font-size: 18px;
+            margin-bottom: 15px;
+            opacity: 0.9;
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .movie-meta-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .movie-genres {
+            margin-bottom: 20px;
+        }
+
+        .genre-tag {
+            display: inline-block;
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            padding: 6px 15px;
+            border-radius: 20px;
+            font-size: 14px;
+            margin-right: 10px;
+            margin-bottom: 10px;
+            backdrop-filter: blur(10px);
+        }
+
+        .movie-synopsis {
+            font-size: 16px;
+            line-height: 1.6;
+            margin-bottom: 30px;
+            opacity: 0.9;
+            max-width: 800px;
+        }
+
+        .movie-actions {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 12px 30px;
+            border: none;
+            border-radius: 25px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #e63946 0%, #f77f00 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(230, 57, 70, 0.4);
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            backdrop-filter: blur(10px);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        /* Content Sections */
+        .content-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        .content-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 40px;
+        }
+
+        .section {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 30px;
+        }
+
+        .section-title {
+            font-size: 24px;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #e2e8f0;
+        }
+
+        /* Cast Section */
+        .cast-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+            gap: 20px;
+        }
+
+        .cast-member {
+            text-align: center;
+        }
+
+        .cast-avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 10px;
+            font-size: 24px;
+            color: white;
+            font-weight: 600;
+        }
+
+        .cast-name {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 5px;
+            font-size: 14px;
+        }
+
+        .cast-role {
+            font-size: 12px;
+            color: #666;
+        }
+
+        /* Showtimes Section */
+        .date-selector {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            overflow-x: auto;
+            padding-bottom: 10px;
+        }
+
+        .date-option {
+            background: white;
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            padding: 10px 15px;
+            min-width: 80px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .date-option.active {
+            border-color: #e63946;
+            background: #e63946;
+            color: white;
+        }
+
+        .date-option:hover {
+            border-color: #e63946;
+        }
+
+        .cinema-selector {
+            margin-bottom: 20px;
+        }
+
+        .cinema-tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .cinema-tab {
+            background: white;
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            padding: 10px 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+
+        .cinema-tab.active {
+            border-color: #e63946;
+            background: #e63946;
+            color: white;
+        }
+
+        .showtimes-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+            gap: 10px;
+        }
+
+        .showtime-slot {
+            background: white;
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            padding: 15px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .showtime-slot:hover {
+            border-color: #e63946;
+            transform: translateY(-2px);
+        }
+
+        .showtime-slot .time {
+            font-weight: 600;
+            font-size: 16px;
+            color: #333;
+            margin-bottom: 5px;
+        }
+
+        .showtime-slot .screen-type {
+            font-size: 12px;
+            color: #666;
+        }
+
+        .showtime-slot .price {
+            font-size: 14px;
+            font-weight: 600;
+            color: #e63946;
+            margin-top: 5px;
+        }
+
+        /* Details Sidebar */
+        .details-grid {
+            display: grid;
+            gap: 15px;
+        }
+
+        .detail-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .detail-label {
+            font-weight: 500;
+            color: #666;
+        }
+
+        .detail-value {
+            font-weight: 600;
+            color: #333;
+        }
+
+        /* Loading State */
+        .loading {
+            text-align: center;
+            padding: 60px 20px;
+            color: #666;
+        }
+
+        .spinner {
+            border: 3px solid #e2e8f0;
+            border-radius: 50%;
+            border-top: 3px solid #e63946;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 10000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(5px);
+        }
+
+        .modal-content {
+            background: white;
+            margin: 5% auto;
+            padding: 30px;
+            border-radius: 20px;
+            width: 90%;
+            max-width: 800px;
+            max-height: 80vh;
+            overflow-y: auto;
+            position: relative;
+        }
+
+        .close {
+            color: #aaa;
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .close:hover {
+            color: #e63946;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .movie-hero-container {
+                grid-template-columns: 1fr;
+                text-align: center;
+            }
+
+            .movie-poster {
+                height: 350px;
+                max-width: 250px;
+                margin: 0 auto;
+            }
+
+            .movie-title {
+                font-size: 32px;
+            }
+
+            .content-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .movie-actions {
+                justify-content: center;
+            }
+
+            nav ul {
+                display: none;
+            }
+
+            .mobile-menu {
+                display: block;
+                font-size: 24px;
+                cursor: pointer;
+            }
+        }
+
+        /* Utility Classes */
+        .text-center {
+            text-align: center;
+        }
+
+        .mt-20 {
+            margin-top: 20px;
+        }
+
+        .mb-20 {
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-container">
+            <a href="index.html" class="logo">QFX Cinemas</a>
+
+            <nav>
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="#movies">Movies</a></li>
+                    <li><a href="#cinemas">Cinemas</a></li>
+                    <li><a href="#offers">Offers</a></li>
+                    <li><a href="#club">Club QFX</a></li>
+                    <li>
+                        <select class="location-selector" id="locationSelector">
+                            <option value="kathmandu">Kathmandu</option>
+                            <option value="pokhara">Pokhara</option>
+                            <option value="lalitpur">Lalitpur</option>
+                            <option value="bhaktapur">Bhaktapur</option>
+                            <option value="biratnagar">Biratnagar</option>
+                        </select>
+                    </li>
+                    <li><a href="seproject.html" class="login-btn">Login</a></li>
+                </ul>
+            </nav>
+
+            <div class="mobile-menu">☰</div>
+        </div>
+    </header>
+
+    <section class="movie-hero" id="movieHero">
+        <div class="movie-backdrop" id="movieBackdrop"></div>
+        <div class="movie-hero-content">
+            <div class="movie-hero-container">
+                <div class="movie-poster" id="moviePoster">
+                    <div class="movie-rating-badge" id="movieRating">⭐ N/A</div>
+                </div>
+                <div class="movie-info">
+                    <h1 class="movie-title" id="movieTitle">Loading...</h1>
+                    <div class="movie-meta" id="movieMeta">
+                        <!-- Meta information will be inserted here -->
+                    </div>
+                    <div class="movie-genres" id="movieGenres">
+                        <!-- Genres will be inserted here -->
+                    </div>
+                    <div class="movie-synopsis" id="movieSynopsis">
+                        <!-- Synopsis will be inserted here -->
+                    </div>
+                    <div class="movie-actions">
+                        <button class="btn btn-primary" onclick="playTrailer()">
+                            ▶️ Watch Trailer
+                        </button>
+                        <button class="btn btn-secondary" onclick="addToWatchlist()">
+                            ❤️ Add to Watchlist
+                        </button>
+                        <button class="btn btn-secondary" onclick="shareMovie()">
+                            📤 Share
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div class="content-container">
+        <div class="content-grid">
+            <div class="main-content">
+                <!-- Cast Section -->
+                <div class="section">
+                    <h2 class="section-title">Cast & Crew</h2>
+                    <div class="cast-grid" id="castGrid">
+                        <!-- Cast will be loaded here -->
+                    </div>
+                </div>
+
+                <!-- Showtimes Section -->
+                <div class="section">
+                    <h2 class="section-title">Showtimes</h2>
+                    <div class="date-selector" id="dateSelector">
+                        <!-- Date options will be loaded here -->
+                    </div>
+                    <div class="cinema-selector">
+                        <div class="cinema-tabs" id="cinemaTabs">
+                            <!-- Cinema tabs will be loaded here -->
+                        </div>
+                        <div class="showtimes-grid" id="showtimesGrid">
+                            <!-- Showtimes will be loaded here -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="sidebar">
+                <!-- Movie Details Section -->
+                <div class="section">
+                    <h2 class="section-title">Movie Details</h2>
+                    <div class="details-grid" id="movieDetails">
+                        <!-- Movie details will be loaded here -->
+                    </div>
+                </div>
+
+                <!-- Cinema Info Section -->
+                <div class="section" id="cinemaInfoSection" style="display: none;">
+                    <h2 class="section-title">Cinema Information</h2>
+                    <div id="cinemaDetails">
+                        <!-- Cinema details will be loaded here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Trailer Modal -->
+    <div id="trailerModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeTrailerModal()">&times;</span>
+            <h2 style="margin-bottom: 20px;">Movie Trailer</h2>
+            <div id="trailerContainer" style="text-align: center;">
+                <p>Trailer player would be embedded here</p>
+                <p style="margin-top: 20px; color: #666;">In a full implementation, this would show YouTube/Vimeo embed or video player</p>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/movie-service.js"></script>
+    <script src="js/cinema-service.js"></script>
+    <script>
+        let currentMovie = null;
+        let selectedDate = new Date().toISOString().split('T')[0];
+        let selectedCinema = null;
+        let location = 'kathmandu';
+
+        // Initialize page
+        document.addEventListener('DOMContentLoaded', function() {
+            loadMovieFromURL();
+            loadLocationPreference();
+            generateDateSelector();
+            setupLocationSelector();
+        });
+
+        function loadMovieFromURL() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const movieId = urlParams.get('id');
+
+            if (!movieId) {
+                showError('No movie specified');
+                return;
+            }
+
+            loadMovie(movieId);
+        }
+
+        function loadLocationPreference() {
+            location = localStorage.getItem('selectedLocation') || 'kathmandu';
+            const selector = document.getElementById('locationSelector');
+            if (selector) {
+                selector.value = location;
+            }
+        }
+
+        function setupLocationSelector() {
+            const selector = document.getElementById('locationSelector');
+            if (selector) {
+                selector.addEventListener('change', function(e) {
+                    location = e.target.value;
+                    localStorage.setItem('selectedLocation', location);
+                    if (currentMovie) {
+                        loadCinemaShowtimes();
+                    }
+                });
+            }
+        }
+
+        async function loadMovie(movieId) {
+            try {
+                // Wait for movie service to load
+                if (!movieService.movies) {
+                    await movieService.loadMovieData();
+                }
+
+                currentMovie = movieService.getMovieById(movieId);
+
+                if (!currentMovie) {
+                    showError('Movie not found');
+                    return;
+                }
+
+                renderMovieDetails();
+                loadCinemaShowtimes();
+                movieService.addToRecentlyViewed(movieId);
+
+            } catch (error) {
+                console.error('Error loading movie:', error);
+                showError('Error loading movie details');
+            }
+        }
+
+        function renderMovieDetails() {
+            if (!currentMovie) return;
+
+            // Update hero section
+            document.getElementById('movieTitle').textContent = currentMovie.title;
+            document.getElementById('movieRating').textContent = `⭐ ${currentMovie.imdb_rating || 'N/A'}`;
+            document.getElementById('movieBackdrop').style.backgroundImage = `url('${currentMovie.backdrop_url}')`;
+            document.getElementById('moviePoster').style.backgroundImage = `url('${currentMovie.poster_url}')`;
+            document.getElementById('movieSynopsis').textContent = currentMovie.synopsis;
+
+            // Update meta information
+            const metaHtml = `
+                <div class="movie-meta-item">🎬 ${currentMovie.duration}</div>
+                <div class="movie-meta-item">⭐ ${currentMovie.rating}</div>
+                <div class="movie-meta-item">🌐 ${currentMovie.language}</div>
+                <div class="movie-meta-item">📅 ${new Date(currentMovie.release_date).toLocaleDateString()}</div>
+                <div class="movie-meta-item">🎭 ${currentMovie.director}</div>
+            `;
+            document.getElementById('movieMeta').innerHTML = metaHtml;
+
+            // Update genres
+            const genresHtml = currentMovie.genre.map(g =>
+                `<span class="genre-tag">${g}</span>`
+            ).join('');
+            document.getElementById('movieGenres').innerHTML = genresHtml;
+
+            // Update cast
+            const castHtml = [
+                { name: currentMovie.director, role: 'Director', initial: 'D' },
+                ...currentMovie.cast.slice(0, 6).map((actor, index) => ({
+                    name: actor,
+                    role: 'Actor',
+                    initial: actor.charAt(0).toUpperCase()
+                }))
+            ].map(person => `
+                <div class="cast-member">
+                    <div class="cast-avatar">${person.initial}</div>
+                    <div class="cast-name">${person.name}</div>
+                    <div class="cast-role">${person.role}</div>
+                </div>
+            `).join('');
+            document.getElementById('castGrid').innerHTML = castHtml;
+
+            // Update movie details sidebar
+            const detailsHtml = `
+                <div class="detail-item">
+                    <span class="detail-label">Duration</span>
+                    <span class="detail-value">${currentMovie.duration}</span>
+                </div>
+                <div class="detail-item">
+                    <span class="detail-label">Rating</span>
+                    <span class="detail-value">${currentMovie.rating}</span>
+                </div>
+                <div class="detail-item">
+                    <span class="detail-label">Language</span>
+                    <span class="detail-value">${currentMovie.language}</span>
+                </div>
+                <div class="detail-item">
+                    <span class="detail-label">Release Date</span>
+                    <span class="detail-value">${new Date(currentMovie.release_date).toLocaleDateString()}</span>
+                </div>
+                <div class="detail-item">
+                    <span class="detail-label">Genre</span>
+                    <span class="detail-value">${currentMovie.genre.join(', ')}</span>
+                </div>
+                <div class="detail-item">
+                    <span class="detail-label">Director</span>
+                    <span class="detail-value">${currentMovie.director}</span>
+                </div>
+                <div class="detail-item">
+                    <span class="detail-label">IMDb Rating</span>
+                    <span class="detail-value">⭐ ${currentMovie.imdb_rating || 'N/A'}</span>
+                </div>
+            `;
+            document.getElementById('movieDetails').innerHTML = detailsHtml;
+
+            // Update page title
+            document.title = `${currentMovie.title} - QFX Cinemas`;
+        }
+
+        function generateDateSelector() {
+            const dateSelector = document.getElementById('dateSelector');
+            const dates = [];
+
+            for (let i = 0; i < 7; i++) {
+                const date = new Date();
+                date.setDate(date.getDate() + i);
+                dates.push(date);
+            }
+
+            const dateHtml = dates.map((date, index) => {
+                const dateStr = date.toISOString().split('T')[0];
+                const isActive = index === 0;
+                const dayName = index === 0 ? 'Today' : date.toLocaleDateString('en', { weekday: 'short' });
+                const dayNum = date.getDate();
+
+                return `
+                    <div class="date-option ${isActive ? 'active' : ''}"
+                         data-date="${dateStr}"
+                         onclick="selectDate('${dateStr}', this)">
+                        <div>${dayName}</div>
+                        <div style="font-size: 18px; font-weight: 600;">${dayNum}</div>
+                    </div>
+                `;
+            }).join('');
+
+            dateSelector.innerHTML = dateHtml;
+        }
+
+        function selectDate(date, element) {
+            selectedDate = date;
+
+            // Update active state
+            document.querySelectorAll('.date-option').forEach(opt => {
+                opt.classList.remove('active');
+            });
+            element.classList.add('active');
+
+            // Reload showtimes
+            if (currentMovie) {
+                loadCinemaShowtimes();
+            }
+        }
+
+        function loadCinemaShowtimes() {
+            if (!currentMovie) return;
+
+            const cinemas = cinemaService.getCinemasByLocation(location);
+
+            if (cinemas.length === 0) {
+                document.getElementById('cinemaTabs').innerHTML =
+                    '<p style="color: #666;">No cinemas available in this location</p>';
+                document.getElementById('showtimesGrid').innerHTML = '';
+                return;
+            }
+
+            // Generate cinema tabs
+            const cinemaTabsHtml = cinemas.map((cinema, index) => {
+                const isActive = index === 0;
+                const showtimes = movieService.getMovieShowtimes(currentMovie.id, location);
+                const hasShowtimes = showtimes && showtimes[cinema.id];
+
+                return `
+                    <div class="cinema-tab ${isActive ? 'active' : ''}"
+                         data-cinema="${cinema.id}"
+                         onclick="selectCinema('${cinema.id}', this)"
+                         style="${!hasShowtimes ? 'opacity: 0.5; cursor: not-allowed;' : ''}">
+                        ${cinema.name}
+                    </div>
+                `;
+            }).join('');
+
+            document.getElementById('cinemaTabs').innerHTML = cinemaTabsHtml;
+
+            // Select first available cinema
+            if (cinemas.length > 0) {
+                selectCinema(cinemas[0].id);
+            }
+        }
+
+        function selectCinema(cinemaId, element) {
+            selectedCinema = cinemaId;
+
+            // Update active state
+            document.querySelectorAll('.cinema-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            if (element) {
+                element.classList.add('active');
+            }
+
+            // Load showtimes for selected cinema
+            loadShowtimes(cinemaId);
+
+            // Show cinema info
+            showCinemaInfo(cinemaId);
+        }
+
+        function loadShowtimes(cinemaId) {
+            if (!currentMovie) return;
+
+            const showtimes = movieService.getMovieShowtimes(currentMovie.id, location);
+            const cinemaShowtimes = showtimes && showtimes[cinemaId] ? showtimes[cinemaId] : [];
+
+            if (cinemaShowtimes.length === 0) {
+                document.getElementById('showtimesGrid').innerHTML =
+                    '<p style="color: #666; grid-column: 1/-1;">No showtimes available</p>';
+                return;
+            }
+
+            const cinema = cinemaService.getCinemaById(cinemaId);
+            const screen = cinema ? cinema.screens[0] : null;
+
+            const showtimesHtml = cinemaShowtimes.map(time => {
+                const basePrice = screen ?
+                    Object.values(screen.seatingCategories)[0].price : 350;
+
+                return `
+                    <div class="showtime-slot" onclick="selectShowtime('${time}', '${cinemaId}')">
+                        <div class="time">${time}</div>
+                        <div class="screen-type">${screen ? screen.type : 'Standard'}</div>
+                        <div class="price">Rs. ${basePrice}</div>
+                    </div>
+                `;
+            }).join('');
+
+            document.getElementById('showtimesGrid').innerHTML = showtimesHtml;
+        }
+
+        function showCinemaInfo(cinemaId) {
+            const cinema = cinemaService.getCinemaById(cinemaId);
+            if (!cinema) return;
+
+            const cinemaInfoHtml = `
+                <div class="detail-item">
+                    <span class="detail-label">Name</span>
+                    <span class="detail-value">${cinema.name}</span>
+                </div>
+                <div class="detail-item">
+                    <span class="detail-label">Address</span>
+                    <span class="detail-value">${cinema.address}</span>
+                </div>
+                <div class="detail-item">
+                    <span class="detail-label">Phone</span>
+                    <span class="detail-value">${cinema.phone}</span>
+                </div>
+                <div class="detail-item">
+                    <span class="detail-label">Facilities</span>
+                    <span class="detail-value">${cinema.facilities.join(', ')}</span>
+                </div>
+                <div class="detail-item">
+                    <span class="detail-label">Hours</span>
+                    <span class="detail-value">${cinema.operatingHours}</span>
+                </div>
+            `;
+
+            document.getElementById('cinemaDetails').innerHTML = cinemaInfoHtml;
+            document.getElementById('cinemaInfoSection').style.display = 'block';
+        }
+
+        function selectShowtime(time, cinemaId) {
+            if (!currentMovie || !cinemaId) return;
+
+            // Save booking information
+            const bookingData = {
+                movieId: currentMovie.id,
+                cinemaId: cinemaId,
+                date: selectedDate,
+                time: time,
+                location: location
+            };
+
+            localStorage.setItem('currentBooking', JSON.stringify(bookingData));
+
+            // Redirect to seat selection
+            window.location.href = 'seat-selection.html';
+        }
+
+        function playTrailer() {
+            if (!currentMovie || !currentMovie.trailer_url) {
+                alert('Trailer not available for this movie');
+                return;
+            }
+
+            document.getElementById('trailerModal').style.display = 'block';
+
+            // In a real implementation, this would embed the actual trailer
+            document.getElementById('trailerContainer').innerHTML = `
+                <div style="background: #000; height: 400px; display: flex; align-items: center; justify-content: center; border-radius: 10px;">
+                    <div style="text-align: center; color: white;">
+                        <div style="font-size: 48px; margin-bottom: 20px;">▶️</div>
+                        <h3>${currentMovie.title}</h3>
+                        <p>Trailer would play here</p>
+                        <p style="opacity: 0.7; font-size: 14px; margin-top: 10px;">
+                            Trailer URL: ${currentMovie.trailer_url}
+                        </p>
+                    </div>
+                </div>
+            `;
+        }
+
+        function closeTrailerModal() {
+            document.getElementById('trailerModal').style.display = 'none';
+        }
+
+        function addToWatchlist() {
+            if (!currentMovie) return;
+
+            const added = movieService.addToWatchlist(currentMovie.id);
+            if (added) {
+                alert(`${currentMovie.title} added to your watchlist!`);
+            } else {
+                alert(`${currentMovie.title} is already in your watchlist.`);
+            }
+        }
+
+        function shareMovie() {
+            if (!currentMovie) return;
+
+            const shareUrl = window.location.href;
+            const shareText = `Check out ${currentMovie.title} at QFX Cinemas!`;
+
+            if (navigator.share) {
+                navigator.share({
+                    title: currentMovie.title,
+                    text: shareText,
+                    url: shareUrl
+                }).catch(err => console.log('Error sharing:', err));
+            } else {
+                // Fallback - copy to clipboard
+                navigator.clipboard.writeText(`${shareText} ${shareUrl}`).then(() => {
+                    alert('Link copied to clipboard!');
+                }).catch(() => {
+                    alert(`Share this movie: ${shareUrl}`);
+                });
+            }
+        }
+
+        function showError(message) {
+            document.getElementById('movieTitle').textContent = 'Error';
+            document.getElementById('movieSynopsis').textContent = message;
+            document.getElementById('castGrid').innerHTML = '';
+            document.getElementById('showtimesGrid').innerHTML = '';
+        }
+
+        // Close modal when clicking outside
+        window.onclick = function(event) {
+            const modal = document.getElementById('trailerModal');
+            if (event.target === modal) {
+                modal.style.display = 'none';
+            }
+        }
+    </script>
+</body>
+</html>
